@@ -4,6 +4,8 @@ import { getRecipes } from '../api/recipes';
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -14,7 +16,10 @@ const RecipesPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await getRecipes(token);
+      const params = new URLSearchParams();
+      if(search) params.append('search',search);
+      if(category) params.append('category',category);
+      const res = await getRecipes(token, params.toString());
       const data = await res.json();
       if (!res.ok) {
         setError('Failed to load recipes');
@@ -51,6 +56,27 @@ const RecipesPage = () => {
       <div className="note-actions">
         <button className="btn-primary" onClick={handleNewRecipe}>New Recipe</button>
       </div>
+      <div style={{ marginBottom: '16px', display: 'flex', gap: '10px' }}>
+  <input
+    type='text'
+    placeholder='Search recipes...'
+    value={search}
+    onChange={e => setSearch(e.target.value)}
+  />
+  <select value={category} onChange={e => setCategory(e.target.value)}>
+    <option value=''>All categories</option>
+    <option value='breakfast'>Breakfast</option>
+    <option value='lunch'>Lunch</option>
+    <option value='dinner'>Dinner</option>
+    <option value='dessert'>Dessert</option>
+    <option value='snack'>Snack</option>
+  </select>
+  <button className='btn-secondary' onClick={fetchRecipes}>Search</button>
+  <button className='btn-secondary' onClick={() => {
+    setSearch('')
+    setCategory('')
+  }}>Clear</button>
+</div>
       {recipes.length === 0 ? <p >No recipes yet. Create one above</p> :
         recipes.map(recipe => (
           <div className="note-card" key={recipe.id}>

@@ -7,9 +7,10 @@ function getAuthHeaders(token) {
     }
 }
 
-export async function getRecipes(token) {
+export async function getRecipes(token, queryString = '') {
 
-    const res = await fetch(`${BASE_URL}/api/recipes`, {
+    const url = queryString? `${BASE_URL}/api/recipes?${queryString}` : `${BASE_URL}/api/recipes`;
+    const res = await fetch(url, {
         headers: getAuthHeaders(token)
     })
 
