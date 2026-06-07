@@ -9,7 +9,7 @@ const NewRecipePage = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [prep_time, setPrep_time] = useState(0);
-
+  const [image, setImage] = useState(null);
   const [ingredients, setIngredients] = useState([{ name: '', amount: '', unit: '' }]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -41,8 +41,17 @@ const NewRecipePage = () => {
     setLoading(true);
     try {
 
-      const recipeData = { title, description, category, prep_time, ingredients }
-      const res = await createRecipe(token, recipeData)
+      // const recipeData = { title, description, category, prep_time, ingredients }
+      // const res = await createRecipe(token, recipeData)
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('category', category);
+      formData.append('prep_time', prep_time);
+      formData.append('ingredients', JSON.stringify(ingredients));
+      if (image) formData.append('image', image);
+
+      const res = await createRecipe(token, formData);
       const data = await res.json();
       if (!res.ok) {
         setError(data.error);
@@ -69,7 +78,11 @@ const NewRecipePage = () => {
           <textarea placeholder='recipe description' value={description} onChange={e => setDescription(e.target.value)} />
           <input type='text' placeholder='recipe category' value={category} onChange={e => setCategory(e.target.value)} />
           <input type='number' placeholder='recipe prep time' value={prep_time} onChange={e => setPrep_time(e.target.value)} />
-          
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={e => setImage(e.target.files[0])}
+          />
           <h3>Ingredients</h3>
           {ingredients.map((ind, i) => (
             <div key={i} className="note-actions" style={{ marginBottom: '8px' }}>

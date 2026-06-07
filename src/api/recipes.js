@@ -24,12 +24,15 @@ export async function getRecipe(token, id) {
 
     return res;
 }
-export async function createRecipe(token, recipeData) {
+export async function createRecipe(token, formData) {
 
     const res = await fetch(`${BASE_URL}/api/recipes`, {
         method: 'POST',
-        headers: getAuthHeaders(token),
-        body: JSON.stringify(recipeData)
+        // headers: getAuthHeaders(token),
+        headers : {
+            'Authorization' : `Bearer ${token}`
+        },
+        body: formData
     });
 
     return res;

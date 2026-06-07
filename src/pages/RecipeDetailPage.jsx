@@ -63,6 +63,13 @@ return (
     {error && <p className="error">{error}</p>}
 
     <div className="note-card">
+    {recipe.image_url && (
+    <img 
+        src={recipe.image_url} 
+        alt={recipe.title}
+        style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', borderRadius: '8px', marginBottom: '16px' }}
+    />
+)}
       <p><strong>Category:</strong> {recipe.category}</p>
       <p><strong>Prep time:</strong> {recipe.prep_time} mins</p>
       <p><strong>Description:</strong> {recipe.description}</p>
